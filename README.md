@@ -15,8 +15,9 @@
 # Usage
 
 ```bash
-$ php language-tools compare resources/lang/en/ resources/lang/es/
-# Comparing ../helpdesk/resources/lang/en/ against ../helpdesk/resources/lang/es/
+$ composer require --dev supportpal/language-tools 
+$ php vendor/bin/language-tools compare resources/lang/en/ resources/lang/es/
+# Comparing resources/lang/en/ against resources/lang/es/
 
 
 ```
