@@ -1,6 +1,7 @@
 {
     "name": "supportpal/language-tools",
-    "type": "project",
+    "description": "A set of CLI tools to help analyse and maintain SupportPal language files.",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
