@@ -37,7 +37,7 @@ class CompareDirectory
     public function diff(): array
     {
         $differences = [];
-        foreach (Finder::create()->files()->in($this->dir1) as $file) {
+        foreach (Finder::create()->files()->name('*.php')->in($this->dir1) as $file) {
             $path = $file->getPathname();
             $otherPath = realpath($this->dir2) . DIRECTORY_SEPARATOR . $file->getFilename();
 
