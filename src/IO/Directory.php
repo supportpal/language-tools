@@ -35,7 +35,7 @@ class Directory
 
     public function each(Closure $callback): void
     {
-        foreach (Finder::create()->files()->name('*.php')->in($this->dir1) as $file) {
+        foreach (Finder::create()->files()->depth(0)->name('*.php')->in($this->dir1) as $file) {
             $otherPath = realpath($this->dir2) . DIRECTORY_SEPARATOR . $file->getFilename();
 
             $callback->call($this, $file, new SplFileInfo($otherPath));
