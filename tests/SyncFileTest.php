@@ -37,7 +37,7 @@ class SyncFileTest extends TestCase
             '<?php declare(strict_types=1);
 
 return [
-    "foo" => "foo",
+    "foo" => "translated foo",
 ];
 '
         ];
