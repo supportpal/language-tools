@@ -4,7 +4,7 @@ namespace Tests;
 
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
-use SupportPal\LanguageTools\CompareFile;
+use SupportPal\LanguageTools\IO\Compare\CompareFile;
 
 class CompareFileTest extends TestCase
 {

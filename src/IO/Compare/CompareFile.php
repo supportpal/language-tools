@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace SupportPal\LanguageTools;
+namespace SupportPal\LanguageTools\IO\Compare;
 
 use InvalidArgumentException;
 use RuntimeException;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
+use SupportPal\LanguageTools\IO\File;
 
-use function file_exists;
 use function file_get_contents;
 use function is_string;
 use function preg_replace;
@@ -15,28 +15,10 @@ use function sprintf;
 use function strlen;
 use function trim;
 
-class CompareFile
+class CompareFile extends File
 {
-    /** @var string */
-    private $file1;
-
-    /** @var string */
-    private $file2;
-
     /** @var array<mixed> */
     private $diff;
-
-    public function __construct(string $file1, string $file2)
-    {
-        foreach ([$file1, $file2] as $file) {
-            if (! file_exists($file)) {
-                throw new InvalidArgumentException(sprintf('%s does not exist.', $file));
-            }
-        }
-
-        $this->file1 = $file1;
-        $this->file2 = $file2;
-    }
 
     /**
      * @return mixed[]

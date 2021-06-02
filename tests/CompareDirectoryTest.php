@@ -3,7 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use SupportPal\LanguageTools\CompareDirectory;
+use SupportPal\LanguageTools\IO\Compare\CompareDirectory;
 
 class CompareDirectoryTest extends TestCase
 {

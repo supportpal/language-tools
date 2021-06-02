@@ -15,9 +15,34 @@
 # Usage
 
 ```bash
-$ composer require --dev supportpal/language-tools 
+$ composer require --dev supportpal/language-tools
+```
+
+## Compare Command
+
+Compare your translation against the English translation files.
+
+This will produce a diff for each file which differs from its English equivalent.
+
+```bash 
 $ php vendor/bin/language-tools compare resources/lang/en/ resources/lang/es/
 # Comparing resources/lang/en/ against resources/lang/es/
 
+```
+
+## Sync Command
+
+> :warning: **Experimental** :warning:
+>
+> Check the changes match what you expect.
+
+Synchronise your translation with the English translation files.
+
+This will add / remove translation strings, and also update the formatting of the file
+to match the English equivalent.
+
+```bash
+$ php vendor/bin/language-tools sync resources/lang/en/ resources/lang/es/
+# Synchronising resources/lang/es/ with resources/lang/en/ ...
 
 ```
