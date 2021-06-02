@@ -43,6 +43,6 @@ to match the English equivalent.
 
 ```bash
 $ php vendor/bin/language-tools sync resources/lang/en/ resources/lang/es/
-# Synchronising resources/lang/en/ with resources/lang/es/ ...
+# Synchronising resources/lang/es/ with resources/lang/en/ ...
 
 ```

@@ -5,6 +5,10 @@ namespace SupportPal\LanguageTools\Command;
 use SupportPal\LanguageTools\IO\Sync\SyncDirectory;
 use Symfony\Component\Console\Input\InputArgument;
 
+use function sprintf;
+
+use const PHP_EOL;
+
 class SyncCommand extends Command
 {
     /** @var string */
@@ -34,7 +38,7 @@ EOF
         $dir1 = $this->singleArg('dir1');
         $dir2 = $this->singleArg('dir2');
 
-        $this->info(sprintf('# Synchronising %s with %s ...' . PHP_EOL, $dir1, $dir2));
+        $this->info(sprintf('# Synchronising %s with %s ...' . PHP_EOL, $dir2, $dir1));
 
         (new SyncDirectory($dir1, $dir2))->sync();
 
