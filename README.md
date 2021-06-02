@@ -32,7 +32,7 @@ $ php vendor/bin/language-tools compare resources/lang/en/ resources/lang/es/
 
 ## Sync Command
 
-:warning: Experimental! Check the changes match what you expect.
+> :warning: Experimental! :warning: Check the changes match what you expect.
 
 Synchronise your translation with the English translation files.
 
