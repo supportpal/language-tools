@@ -32,7 +32,7 @@ $ php vendor/bin/language-tools compare resources/lang/en/ resources/lang/es/
 
 ## Sync Command
 
-> :warning: Experimental! :warning:
+> :warning: **Experimental** :warning:
 >
 > Check the changes match what you expect.
 
