@@ -74,5 +74,17 @@ return [
 ];
 '
         ];
+
+        yield [
+            $base . '/mixed-quotes2.php',
+            $base . '/mixed-quotes2.php',
+            '<?php declare(strict_types=1);
+
+return [
+    "na"  => \'N/A\',
+    "foo" => "bar",
+];
+'
+        ];
     }
 }

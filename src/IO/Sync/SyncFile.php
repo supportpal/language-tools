@@ -64,7 +64,7 @@ class SyncFile extends File
             function (array $matches) use ($value) {
                 $usingDoubleQuotes = substr($matches[1], -1) === '"';
 
-                return $matches[1] . $this->mapValue($value, $usingDoubleQuotes) . $matches[3];
+                return $matches[1] . $this->mapValue($value, $usingDoubleQuotes) . $matches[4];
             },
             $this->contents
         );
@@ -79,7 +79,7 @@ class SyncFile extends File
     private function getRegex(string $key): string
     {
         return sprintf(
-            '/^(\s*["\']%s[\'"]\s*=>\s*[\'"])((?:[^"\\\\]|\\\\.)*)([\'"],?.*?)$/m',
+            '/^(\s*(["\'])%s\2\s*=>\s*([\'"]))(?:[^"\\\\]|\\\\.)*(\3,?.*?)$/m',
             preg_quote($key, '/')
         );
     }
