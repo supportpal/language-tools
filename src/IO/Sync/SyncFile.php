@@ -14,11 +14,15 @@ use function preg_replace_callback;
 use function sprintf;
 use function str_replace;
 use function substr;
+use function uniqid;
 
 class SyncFile extends File
 {
     /** @var string */
     private $contents;
+
+    /** @var string */
+    private $uniqId;
 
     public function sync(): self
     {
@@ -27,6 +31,7 @@ class SyncFile extends File
             throw new RuntimeException('Failed to read file contents.');
         }
 
+        $this->uniqId = uniqid('__');
         $this->contents = $contents;
         $this->replaceArray(require $this->file2);
 
@@ -35,12 +40,12 @@ class SyncFile extends File
 
     public function write(): void
     {
-        file_put_contents($this->file2, $this->contents);
+        file_put_contents($this->file2, $this->getContents());
     }
 
     public function getContents(): string
     {
-        return $this->contents;
+        return str_replace($this->uniqId, '', $this->contents);
     }
 
     /**
@@ -61,12 +66,15 @@ class SyncFile extends File
     {
         $contents = preg_replace_callback(
             $this->getRegex($key),
-            function (array $matches) use ($value) {
+            function (array $matches) use ($key, $value) {
                 $usingDoubleQuotes = substr($matches[1], -1) === '"';
 
-                return $matches[1] . $this->mapValue($value, $usingDoubleQuotes) . $matches[4];
+                return str_replace($key, $key . $this->uniqId, $matches[1])
+                    . $this->mapValue($value, $usingDoubleQuotes)
+                    . $matches[4];
             },
-            $this->contents
+            $this->contents,
+            1
         );
 
         if ($contents === null) {
