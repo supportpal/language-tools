@@ -32,6 +32,17 @@ class SyncFileTest extends TestCase
         $base = __DIR__.'/__fixtures__/sync';
 
         yield [
+            $base . '/en/simple.php',
+            $base . '/es/simple.php',
+            '<?php declare(strict_types=1);
+
+return [
+    "foo" => "foo",
+];
+'
+        ];
+
+        yield [
             $base . '/comment-quotes.php',
             $base . '/comment-quotes.php',
             '<?php declare(strict_types=1);
