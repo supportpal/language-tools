@@ -5,11 +5,15 @@ namespace SupportPal\LanguageTools\IO\Sync;
 use RuntimeException;
 use SupportPal\LanguageTools\IO\File;
 
+use function addcslashes;
 use function file_get_contents;
 use function file_put_contents;
 use function is_array;
-use function preg_replace;
+use function preg_quote;
+use function preg_replace_callback;
 use function sprintf;
+use function str_replace;
+use function substr;
 
 class SyncFile extends File
 {
@@ -42,7 +46,7 @@ class SyncFile extends File
     /**
      * @param mixed[] $data
      */
-    private function replaceArray(array $data)
+    private function replaceArray(array $data): void
     {
         foreach ($data as $key => $value) {
             if (is_array($value)) {
@@ -55,9 +59,13 @@ class SyncFile extends File
 
     private function replaceValue(string $key, string $value): void
     {
-        $contents = preg_replace(
+        $contents = preg_replace_callback(
             $this->getRegex($key),
-            sprintf('$1%s$3', $value),
+            function (array $matches) use ($value) {
+                $usingDoubleQuotes = substr($matches[1], -1) === '"';
+
+                return $matches[1] . $this->mapValue($value, $usingDoubleQuotes) . $matches[3];
+            },
             $this->contents
         );
 
@@ -70,6 +78,17 @@ class SyncFile extends File
 
     private function getRegex(string $key): string
     {
-        return sprintf('/^(\s*["\']%s[\'"]\s*=>\s*[\'"])(.*?)([\'"],?.*?)$/m', $key);
+        return sprintf(
+            '/^(\s*["\']%s[\'"]\s*=>\s*[\'"])((?:[^"\\\\]|\\\\.)*)([\'"],?.*?)$/m',
+            preg_quote($key, '/')
+        );
+    }
+
+    private function mapValue(string $value, bool $usingDoubleQuotes): string
+    {
+        $escapedValue = addcslashes($value, $usingDoubleQuotes ? '"' : '\'');
+        $escapedValue = str_replace("\n", '\n', $escapedValue);
+
+        return $escapedValue;
     }
 }

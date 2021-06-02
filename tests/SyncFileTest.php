@@ -29,26 +29,48 @@ class SyncFileTest extends TestCase
      */
     public function syncProvider(): iterable
     {
-        $base = __DIR__.'/__fixtures__/fail';
+        $base = __DIR__.'/__fixtures__/sync';
 
         yield [
-            $base . '/en/comments.php',
-            $base . '/es/comments.php',
+            $base . '/comment-quotes.php',
+            $base . '/comment-quotes.php',
             '<?php declare(strict_types=1);
 
 return [
-    "foo1" => "foo", // foo bar
+    "foo"           => "times", // As in \'5 times\'
 ];
 '
         ];
 
         yield [
-            $base . '/en/mixed-quotes.php',
-            $base . '/es/mixed-quotes.php',
+            $base . '/escaped-quotes.php',
+            $base . '/escaped-quotes.php',
             '<?php declare(strict_types=1);
 
 return [
-    "foo1_bar" => \'foo bar\',
+    "foo"         => "foo \\"admin\\"",
+];
+'
+        ];
+
+        yield [
+            $base . '/linefeeds.php',
+            $base . '/linefeeds.php',
+            '<?php declare(strict_types=1);
+
+return [
+    "foo"         => "foo\nbar",
+];
+'
+        ];
+
+        yield [
+            $base . '/mixed-quotes.php',
+            $base . '/mixed-quotes.php',
+            '<?php declare(strict_types=1);
+
+return [
+    "foo"           => "it\'s time",
 ];
 '
         ];

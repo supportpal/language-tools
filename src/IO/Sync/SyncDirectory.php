@@ -10,7 +10,8 @@ class SyncDirectory extends Directory
     public function sync(): void
     {
         $this->each(function (SplFileInfo $file, SplFileInfo $otherFile) {
-            (new SyncFile($file->getPathname(), $otherFile->getPathname()))->sync();
+            $file = new SyncFile($file->getPathname(), $otherFile->getPathname());
+            $file->sync()->write();
         });
     }
 }
