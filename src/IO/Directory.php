@@ -1,8 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace SupportPal\LanguageTools;
+namespace SupportPal\LanguageTools\IO;
 
+use Closure;
 use InvalidArgumentException;
+use SplFileInfo;
 use Symfony\Component\Finder\Finder;
 
 use function file_exists;
@@ -11,13 +13,13 @@ use function sprintf;
 
 use const DIRECTORY_SEPARATOR;
 
-class CompareDirectory
+class Directory
 {
     /** @var string */
-    private $dir1;
+    protected $dir1;
 
     /** @var string */
-    private $dir2;
+    protected $dir2;
 
     public function __construct(string $dir1, string $dir2)
     {
@@ -31,24 +33,12 @@ class CompareDirectory
         $this->dir2 = $dir2;
     }
 
-    /**
-     * @return string[]
-     */
-    public function diff(): array
+    public function each(Closure $callback): void
     {
-        $differences = [];
         foreach (Finder::create()->files()->name('*.php')->in($this->dir1) as $file) {
-            $path = $file->getPathname();
             $otherPath = realpath($this->dir2) . DIRECTORY_SEPARATOR . $file->getFilename();
 
-            $comparison = new CompareFile($path, $otherPath);
-            if (! $comparison->hasDifferences()) {
-                continue;
-            }
-
-            $differences[$file->getFilename()] = $comparison->diff();
+            $callback->call($this, $file, new SplFileInfo($otherPath));
         }
-
-        return $differences;
     }
 }
