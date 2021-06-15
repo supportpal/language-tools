@@ -13,7 +13,7 @@ class CompareDirectory extends Directory
     public function diff(): array
     {
         $differences = [];
-        $this->each(function (SplFileInfo $file, SplFileInfo $otherPath) use ($differences) {
+        $this->each(function (SplFileInfo $file, SplFileInfo $otherPath) use (&$differences) {
             $comparison = new CompareFile($file->getPathname(), $otherPath->getPathname());
             if (! $comparison->hasDifferences()) {
                 return null;
