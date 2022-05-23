@@ -46,3 +46,17 @@ $ php vendor/bin/language-tools sync resources/lang/en/ resources/lang/es/
 # Synchronising resources/lang/es/ with resources/lang/en/ ...
 
 ```
+
+## Untranslated Command
+
+Find language strings which have not yet been translated.
+```bash
+$ php language-tools untranslated en/ es/
+# Searching for untranslated language strings in es/
+
+# user.php has untranslated language strings ...
+"manager" => "Manager",
+"avatar" => "Avatar",
+"idp" => "IdP",
+
+```
