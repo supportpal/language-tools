@@ -8,6 +8,7 @@ use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\UnifiedDiffOutputBuilder;
 use SupportPal\LanguageTools\IO\File;
 
+use function file_exists;
 use function file_get_contents;
 use function is_string;
 use function preg_replace;
@@ -47,6 +48,17 @@ class CompareFile extends File
         return (new UnifiedDiffOutputBuilder)->getDiff(
             $this->diffToArray()
         );
+    }
+
+    protected function validate(string $file1, string $file2): bool
+    {
+        foreach ([$file1, $file2] as $file) {
+            if (! file_exists($file)) {
+                throw new InvalidArgumentException(sprintf('%s does not exist.', $file));
+            }
+        }
+
+        return parent::validate($file1, $file2);
     }
 
     private function getContentsWithoutValues(string $path): string

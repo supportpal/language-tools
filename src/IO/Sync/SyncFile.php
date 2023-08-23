@@ -2,10 +2,12 @@
 
 namespace SupportPal\LanguageTools\IO\Sync;
 
+use InvalidArgumentException;
 use RuntimeException;
 use SupportPal\LanguageTools\IO\File;
 
 use function addcslashes;
+use function file_exists;
 use function file_get_contents;
 use function file_put_contents;
 use function is_array;
@@ -33,7 +35,9 @@ class SyncFile extends File
 
         $this->uniqId = uniqid('__');
         $this->contents = $contents;
-        $this->replaceArray(require $this->file2);
+        if (file_exists($this->file2)) {
+            $this->replaceArray(require $this->file2);
+        }
 
         return $this;
     }
@@ -46,6 +50,15 @@ class SyncFile extends File
     public function getContents(): string
     {
         return str_replace($this->uniqId, '', $this->contents);
+    }
+
+    protected function validate(string $file1, string $file2): bool
+    {
+        if (! file_exists($file1)) {
+            throw new InvalidArgumentException(sprintf('File 1 \'%s\' must exist.', $file1));
+        }
+
+        return parent::validate($file1, $file2);
     }
 
     /**

@@ -18,10 +18,10 @@ class SyncFileTest extends TestCase
     /** @dataProvider syncProvider */
     public function testSync(string $file1, string $file2, string $expected): void
     {
-        $this->assertSame(
-            $expected,
-            (new SyncFile($file1, $file2))->sync()->getContents()
-        );
+        $syncFile = new SyncFile($file1, $file2);
+        $syncFile->sync();
+
+        $this->assertSame($expected, $syncFile->getContents());
     }
 
     /**
@@ -34,6 +34,18 @@ class SyncFileTest extends TestCase
         yield [
             $base . '/en/simple.php',
             $base . '/es/simple.php',
+            '<?php declare(strict_types=1);
+
+return [
+    "foo" => "translated foo",
+];
+'
+        ];
+
+        // Copy en/exists to es/exists.php as it doesn't currently exist.
+        yield [
+            $base . '/en/exists.php',
+            $base . '/es/exists.php',
             '<?php declare(strict_types=1);
 
 return [

@@ -2,11 +2,6 @@
 
 namespace SupportPal\LanguageTools\IO;
 
-use InvalidArgumentException;
-
-use function file_exists;
-use function sprintf;
-
 class File
 {
     /** @var string */
@@ -17,13 +12,14 @@ class File
 
     public function __construct(string $file1, string $file2)
     {
-        foreach ([$file1, $file2] as $file) {
-            if (! file_exists($file)) {
-                throw new InvalidArgumentException(sprintf('%s does not exist.', $file));
-            }
-        }
+        $this->validate($file1, $file2);
 
         $this->file1 = $file1;
         $this->file2 = $file2;
+    }
+
+    protected function validate(string $file1, string $file2): bool
+    {
+        return true;
     }
 }
