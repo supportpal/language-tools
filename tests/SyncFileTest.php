@@ -123,5 +123,20 @@ return [
 ];
 '
         ];
+
+        yield [
+            $base . '/en/replaced-strings.php',
+            $base . '/es/replaced-strings.php',
+            '<?php declare(strict_types=1);
+
+return [
+    /*
+     * 1.0.0
+     */
+    "foo" => "Foo Bar",
+    "bar" => "Bar",
+];
+'
+        ];
     }
 }
