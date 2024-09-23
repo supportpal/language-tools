@@ -34,13 +34,8 @@ class SyncFile extends File
 
     public function sync(): self
     {
-        $contents = file_get_contents($this->file1);
-        if ($contents === false) {
-            throw new RuntimeException('Failed to read file contents.');
-        }
-
         $this->uniqId = uniqid('__');
-        $this->contents = $contents;
+        $this->contents = $this->getFileContents($this->file1);
         if (file_exists($this->file2)) {
             $this->replaceArray(require $this->file2);
         }
@@ -84,7 +79,7 @@ class SyncFile extends File
     private function replaceValue(string $key, string $value): void
     {
         $lineNumberFile1 = $this->getLineNumber($this->contents, $key);
-        $lineNumberFile2 = $this->getLineNumber(file_get_contents($this->file2), $key);
+        $lineNumberFile2 = $this->getLineNumber($this->getFileContents($this->file2), $key);
 
         $contents = preg_replace_callback(
             $this->getRegex($key),
@@ -130,14 +125,20 @@ class SyncFile extends File
         return $escapedValue;
     }
 
+    /**
+     * If a key is duplicated in the array, only the line number of the first matching is returned.
+     */
     private function getLineNumber(string $contents, string $key): ?int
     {
         preg_match_all($this->getRegex($key), $contents, $matches, PREG_OFFSET_CAPTURE);
 
         foreach ($matches[0] as $match) {
-            [$before] = str_split($contents, $match[1]);
+            $string = str_split($contents, $match[1]);
+            if (! isset($string[0]) || $string[0] < 0) {
+                continue;
+            }
 
-            return substr_count($before, PHP_EOL) + 1;
+            return substr_count($string[0], PHP_EOL) + 1;
         }
 
         return null;
