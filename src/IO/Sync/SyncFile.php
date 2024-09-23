@@ -131,8 +131,12 @@ class SyncFile extends File
         preg_match_all($this->getRegex($key), $contents, $matches, PREG_OFFSET_CAPTURE);
 
         foreach ($matches[0] as $match) {
+            if (! isset($match[1]) || $match[1] < 0) {
+                continue;
+            }
+
             $string = str_split($contents, $match[1]);
-            if (! isset($string[0]) || $string[0] < 0) {
+            if (! isset($string[0])) {
                 continue;
             }
 
