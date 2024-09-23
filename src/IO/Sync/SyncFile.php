@@ -3,12 +3,10 @@
 namespace SupportPal\LanguageTools\IO\Sync;
 
 use InvalidArgumentException;
-use RuntimeException;
 use SupportPal\LanguageTools\IO\File;
 
 use function addcslashes;
 use function file_exists;
-use function file_get_contents;
 use function file_put_contents;
 use function is_array;
 use function preg_match_all;
