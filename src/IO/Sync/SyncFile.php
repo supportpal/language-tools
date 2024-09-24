@@ -3,24 +3,20 @@
 namespace SupportPal\LanguageTools\IO\Sync;
 
 use InvalidArgumentException;
+use RuntimeException;
 use SupportPal\LanguageTools\IO\File;
 
 use function addcslashes;
 use function file_exists;
+use function file_get_contents;
 use function file_put_contents;
 use function is_array;
-use function preg_match_all;
 use function preg_quote;
 use function preg_replace_callback;
 use function sprintf;
 use function str_replace;
-use function str_split;
 use function substr;
-use function substr_count;
 use function uniqid;
-
-use const PHP_EOL;
-use const PREG_OFFSET_CAPTURE;
 
 class SyncFile extends File
 {
@@ -32,8 +28,13 @@ class SyncFile extends File
 
     public function sync(): self
     {
+        $contents = file_get_contents($this->file1);
+        if ($contents === false) {
+            throw new RuntimeException('Failed to read file contents.');
+        }
+
         $this->uniqId = uniqid('__');
-        $this->contents = $this->getFileContents($this->file1);
+        $this->contents = $contents;
         if (file_exists($this->file2)) {
             $this->replaceArray(require $this->file2);
         }
@@ -76,25 +77,14 @@ class SyncFile extends File
 
     private function replaceValue(string $key, string $value): void
     {
-        $lineNumberFile1 = $this->getLineNumber($this->contents, $key);
-        $lineNumberFile2 = $this->getLineNumber($this->getFileContents($this->file2), $key);
-
         $contents = preg_replace_callback(
             $this->getRegex($key),
-            function (array $matches) use ($key, $value, $lineNumberFile1, $lineNumberFile2) {
-                // Use file 1's value.
-                if ($lineNumberFile1 !== $lineNumberFile2) {
-                    return str_replace($key, $key . $this->uniqId, $matches[1])
-                        . $matches['value']
-                        . $matches[5];
-                }
-
+            function (array $matches) use ($key, $value) {
                 $usingDoubleQuotes = substr($matches[1], -1) === '"';
 
-                // Use file 2's value.
                 return str_replace($key, $key . $this->uniqId, $matches[1])
                     . $this->mapValue($value, $usingDoubleQuotes)
-                    . $matches[5];
+                    . $matches[4];
             },
             $this->contents,
             1
@@ -110,7 +100,7 @@ class SyncFile extends File
     private function getRegex(string $key): string
     {
         return sprintf(
-            '/^(\s*(["\'])%s\2\s*=>\s*([\'"]))(?<value>(?:[^"\\\\]|\\\\.)*)(\3,?.*?)$/m',
+            '/^(\s*(["\'])%s\2\s*=>\s*([\'"]))(?:[^"\\\\]|\\\\.)*(\3,?.*?)$/m',
             preg_quote($key, '/')
         );
     }
@@ -121,28 +111,5 @@ class SyncFile extends File
         $escapedValue = str_replace("\n", '\n', $escapedValue);
 
         return $escapedValue;
-    }
-
-    /**
-     * If a key is duplicated in the array, only the line number of the first matching is returned.
-     */
-    private function getLineNumber(string $contents, string $key): ?int
-    {
-        preg_match_all($this->getRegex($key), $contents, $matches, PREG_OFFSET_CAPTURE);
-
-        foreach ($matches[0] as $match) {
-            if ($match[1] < 1) {
-                continue;
-            }
-
-            $string = str_split($contents, $match[1]);
-            if (! isset($string[0])) {
-                continue;
-            }
-
-            return substr_count($string[0], PHP_EOL) + 1;
-        }
-
-        return null;
     }
 }
