@@ -16,9 +16,11 @@ if ((!$loader = includeIfExists(__DIR__.'/vendor/autoload.php')) && (!$loader = 
 
 use SupportPal\LanguageTools\Command\CompareCommand;
 use SupportPal\LanguageTools\Command\SyncCommand;
+use SupportPal\LanguageTools\Command\UntranslatedCommand;
 use Symfony\Component\Console\Application;
 
 $console = new Application('SupportPal Language Tools');
 $console->add(new CompareCommand);
 $console->add(new SyncCommand);
+$console->add(new UntranslatedCommand);
 $console->run();
